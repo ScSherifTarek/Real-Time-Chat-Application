@@ -9,6 +9,11 @@
 	crossorigin="anonymous"></script>
 </head>
 <body>
+
+	<?php 
+		session_start();
+		$_SESSION['user'] = 'Sherif Tarek';
+	?>
 	<div id="wrapper">
 		<h1> Welcome to my chat </h1>
 
@@ -16,13 +21,20 @@
 			<div id="chat">
 				
 			</div>
-			<form method="POST">
+			<form method="POST" id="myForm">
 				<textarea id="textarea" name="message" rows="7"></textarea>
 			</form>  		
 		</div>
 	</div>
 
 	<script type="text/javascript">
+		loadChat();
+		function loadChat()
+		{
+			$.post('handlers/messages.php?action=getMessages',function(response){
+				$('#chat').html(response);
+			});
+		}
 		$('#textarea').keydown(function(e){
 			if(e.which == 13 || e.which == 10 )
 			{
@@ -31,8 +43,18 @@
 			}
 		});
 
-		$('form').submit(function(){
-			alert('form submitted using AJAX');
+		$('#myForm').submit(function(){
+			var message = $('#textarea').val();
+			$.post('handlers/messages.php?action=sendMessage&message='+message, function(response){
+				if(response == 1)
+				{
+					$('#myForm').trigger("reset");
+				}
+				else
+				{
+					alert('Something went wrong');
+				}
+			});
 			return false
 		});
 	</script>

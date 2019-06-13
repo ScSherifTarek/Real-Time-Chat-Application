@@ -31,3 +31,14 @@
 	padding: 10px;
 	margin-top: 10px;
 }
+
+.single-message
+{
+	padding: 5px 0px;
+	border-bottom: 1px solid #b3b3b3;
+}
+
+.single-message span
+{
+	float: right;
+}
