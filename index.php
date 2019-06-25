@@ -9,11 +9,6 @@
 	crossorigin="anonymous"></script>
 </head>
 <body>
-
-	<?php 
-		session_start();
-		$_SESSION['user'] = 'Sherif Tarek';
-	?>
 	<div id="wrapper">
 		<h1> Welcome to my chat </h1>
 
@@ -29,10 +24,21 @@
 
 	<script type="text/javascript">
 		loadChat();
+
+		setInterval(function(){
+			loadChat();
+		},1000);
+
 		function loadChat()
 		{
 			$.post('handlers/messages.php?action=getMessages',function(response){
 				$('#chat').html(response);
+
+				var scrollPos = parseInt($('#chat').scrollTop()) + 549;
+				var scrollHeight = $('#chat').prop('scrollHeight');
+
+				if(scrollPos >= scrollHeight)
+					$('#chat').scrollTop( $('#chat').prop('scrollHeight') );
 			});
 		}
 		$('#textarea').keydown(function(e){
@@ -48,6 +54,7 @@
 			$.post('handlers/messages.php?action=sendMessage&message='+message, function(response){
 				if(response == 1)
 				{
+					loadChat();
 					$('#myForm').trigger("reset");
 				}
 				else
